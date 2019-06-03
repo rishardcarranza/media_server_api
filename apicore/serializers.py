@@ -6,7 +6,7 @@ from .models import Extension, Profile
 
 class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
-        user = User.objects.create_user(
+        user = User.objects.create(
             username = validated_data['username'],
             password = make_password(validated_data['password']),
             email = validated_data['email'],
