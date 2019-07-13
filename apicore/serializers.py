@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from .models import Extension, Profile
+from .models import Extension, Career, Profile, Career, Server, ServerUser
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -39,19 +39,22 @@ class ExtensionSerializer(serializers.ModelSerializer):
         model = Extension
         fields = ('id', 'name', 'status')
 
+class CareerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Career
+        fields = ('id', 'name', 'status')
+
 class ProfileSerializer(serializers.ModelSerializer):
-
-    # def create(self, validated_data):
-    #     print(validated_data)
-    #     return Profile.objects.create(**validated_data)
-
-    # def update(self, instance, validated_data):
-    #     print(instance.__dict__)
-    #     print(validated_data['avatar'].__dict__)
-    #     instance.save()
-    #     return instance
-
-
     class Meta:
         model = Profile
-        fields = ('id', 'user', 'avatar')
+        fields = ('id', 'user', 'avatar', 'career')
+
+class ServerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Server
+        fields = ('id', 'hostname', 'ip_address', 'port', 'mac_address', 'volume', 'screen', 'pin')
+
+class ServerUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ServerUser
+        fields = ('server', 'user', 'status', 'session', 'connect_date', 'last_date')

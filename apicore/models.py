@@ -5,29 +5,6 @@ from django.db.models.signals import post_save
 
 # Create your models here.
 
-# For custom upload functionally
-def custom_upload_to(instance, filename):
-    old_instance = Profile.objects.get(pk=instance.pk)
-    old_instance.avatar.delete()
-    return "profiles/" + filename
-
-class Profile(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    avatar = models.ImageField(upload_to=custom_upload_to, blank=True, null=True)
-
-    class Meta:
-        ordering = ["user__username"]
-
-    def __str__(self):
-        return self.user
-
-# For signal use. Create a profile account when the User is created
-@receiver(post_save, sender=User)
-def ensure_profile_exists(sender, instance, **kwargs):
-    if kwargs.get("created", False):
-        Profile.objects.get_or_create(user=instance)
-        # print("Se ha creado el perfil para el usuario " + instance.username)
-
 class Server(models.Model):
     hostname = models.CharField(max_length=200)
     ip_address = models.GenericIPAddressField(protocol="both", unpack_ipv4=False)
@@ -60,6 +37,40 @@ class Extension(models.Model):
 
     def __str__(self):
         return self.name
+
+class Career(models.Model):
+    name = models.CharField(max_length=200)
+    status = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+# For custom upload functionally
+def custom_upload_to(instance, filename):
+    old_instance = Profile.objects.get(pk=instance.pk)
+    old_instance.avatar.delete()
+    return "profiles/" + filename
+
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    avatar = models.ImageField(upload_to=custom_upload_to, blank=True, null=True)
+    career = models.ForeignKey(Career, on_delete=models.CASCADE, blank=True, null=True)
+
+    class Meta:
+        ordering = ["user__username"]
+
+    def __str__(self):
+        return self.user.username
+
+# For signal use. Create a profile account when the User is created
+@receiver(post_save, sender=User)
+def ensure_profile_exists(sender, instance, **kwargs):
+    if kwargs.get("created", False):
+        Profile.objects.get_or_create(user=instance)
+        print("Se ha creado el perfil para el usuario " + instance.username)
 
 class FilesUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
