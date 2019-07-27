@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'rest_auth',
-    'apicore',
+    'apicore.apps.ApicoreConfig',
 ]
 
 MIDDLEWARE = [
@@ -115,7 +115,7 @@ REST_FRAMEWORK = {
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'es-sv'
 
 TIME_ZONE = 'UTC'
 
