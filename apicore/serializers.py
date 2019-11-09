@@ -1,10 +1,17 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
-from .models import Extension, Career, Profile, Career, Server, ServerUser
+from rest_framework.authtoken.models import Token
+from .models import Extension, Career, UserProfile, Career, Server, ServerUser
 
 
 class UserSerializer(serializers.ModelSerializer):
+    # avatar = serializers.URLField(source='profile.avatar', read_only=False)
+
+    class Meta:
+        model = User
+        fields = ('id', 'username', 'password', 'first_name', 'last_name', 'email', 'is_active', 'date_joined', 'last_login')
+
     def create(self, validated_data):
         user = User.objects.create(
             username = validated_data['username'],
@@ -30,9 +37,18 @@ class UserSerializer(serializers.ModelSerializer):
         else:
             return "User not authorized"
 
+class ProfileSerializer(serializers.ModelSerializer):
+    # user = UserSerializer(required=True)
     class Meta:
-        model = User
-        fields = ('id', 'username', 'password', 'first_name', 'last_name', 'email', 'is_active', 'date_joined', 'last_login')
+        model = UserProfile
+        fields = ('id', 'user', 'avatar', 'career')
+
+
+class TokenSerializer(serializers.ModelSerializer):
+    user = UserSerializer()
+    class Meta:
+        model = Token
+        fields = ('key', 'user')
 
 class ExtensionSerializer(serializers.ModelSerializer):
     class Meta:
@@ -43,11 +59,6 @@ class CareerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Career
         fields = ('id', 'name', 'status')
-
-class ProfileSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Profile
-        fields = ('id', 'user', 'avatar', 'career')
 
 class ServerSerializer(serializers.ModelSerializer):
     class Meta:

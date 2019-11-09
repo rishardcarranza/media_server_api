@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_auth',
     'apicore.apps.ApicoreConfig',
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -51,7 +52,17 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+# CORS_ORIGIN_WHITELIST = [
+#     'http://locahost:8100',
+# ]
+# CORS_ORIGIN_REGEX_WHITELIST = [
+#     '*',
+# ]
 
 ROOT_URLCONF = 'media_server.urls'
 
@@ -103,6 +114,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# AUTH_PROFILE_MODULE = 'accounts.UserProfile'
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',
@@ -110,6 +123,10 @@ REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.IsAuthenticated', 
     )
+}
+
+REST_AUTH_SERIALIZERS = {
+    'TOKEN_SERIALIZER': 'apicore.serializers.TokenSerializer',
 }
 
 # Internationalization

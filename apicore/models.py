@@ -63,11 +63,11 @@ class Career(models.Model):
 
 # For custom upload functionally
 def custom_upload_to(instance, filename):
-    old_instance = Profile.objects.get(pk=instance.pk)
+    old_instance = UserProfile.objects.get(pk=instance.pk)
     old_instance.avatar.delete()
     return "profiles/" + filename
 
-class Profile(models.Model):
+class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name = 'Usuario')
     avatar = models.ImageField(upload_to=custom_upload_to, blank=True, null=True, verbose_name = 'Avatar')
     career = models.ForeignKey(Career, on_delete=models.CASCADE, blank=True, null=True, verbose_name = 'Carrera')
@@ -84,7 +84,7 @@ class Profile(models.Model):
 @receiver(post_save, sender=User)
 def ensure_profile_exists(sender, instance, **kwargs):
     if kwargs.get("created", False):
-        Profile.objects.get_or_create(user=instance)
+        UserProfile.objects.get_or_create(user=instance)
         print("Se ha creado el perfil para el usuario " + instance.username)
 
 class FilesUser(models.Model):

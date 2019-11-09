@@ -1,7 +1,12 @@
 from rest_framework import generics, permissions
 from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
 from django.contrib.auth.models import User
-from .models import Extension, Career, Profile, Server, ServerUser
+from .models import Extension, Career, UserProfile, Server, ServerUser
 from .serializers import ExtensionSerializer, CareerSerializer, ProfileSerializer, UserSerializer, ServerSerializer, ServerUserSerializer
 from .permissions import IsOwnerOrReadOnly
 
@@ -29,13 +34,13 @@ class CareerDetail(generics.RetrieveUpdateDestroyAPIView):
     
 
 class ProfileList(generics.ListCreateAPIView):
-    queryset = Profile.objects.all()
+    queryset = UserProfile.objects.all()
     serializer_class = ProfileSerializer
     # permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     # authentication_classes = (SessionAuthentication, TokenAuthentication, BasicAuthentication,) 
 
 class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
-    queryset = Profile.objects.all()
+    queryset = UserProfile.objects.all()
     serializer_class = ProfileSerializer
     permission_classes = (IsOwnerOrReadOnly,)
     # authentication_classes = (SessionAuthentication, TokenAuthentication, BasicAuthentication,)     
@@ -45,7 +50,6 @@ class UserList(generics.ListCreateAPIView):
     serializer_class = UserSerializer
 
     def get_permissions(self):
-        print(self.request.method)
         permission_classes = []
         if self.request.method == 'POST':
             permission_classes = [permissions.AllowAny]
