@@ -69,3 +69,7 @@ class ServerUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = ServerUser
         fields = ('server', 'user', 'status', 'session', 'connect_date', 'last_date')
+
+class LocalServerSerializer(serializers.Serializer):
+    ipaddr = serializers.CharField()
+    user_request = serializers.CharField()

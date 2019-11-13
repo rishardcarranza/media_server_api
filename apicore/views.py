@@ -1,3 +1,4 @@
+import socket
 from rest_framework import generics, permissions
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
@@ -7,7 +8,7 @@ from rest_framework.views import APIView
 
 from django.contrib.auth.models import User
 from .models import Extension, Career, UserProfile, Server, ServerUser
-from .serializers import ExtensionSerializer, CareerSerializer, ProfileSerializer, UserSerializer, ServerSerializer, ServerUserSerializer
+from .serializers import ExtensionSerializer, CareerSerializer, ProfileSerializer, UserSerializer, ServerSerializer, ServerUserSerializer, LocalServerSerializer
 from .permissions import IsOwnerOrReadOnly
 
 
@@ -81,3 +82,14 @@ class ServerUserList(generics.ListCreateAPIView):
 class ServerUserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ServerUser.objects.all()
     serializer_class = ServerUserSerializer
+
+class LocalServerView(APIView):
+    
+    def post(self, request):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        loca_ip = s.getsockname()[0]
+
+        yourdata= [{"ipaddr": loca_ip, "user_request": request.user}]
+        results = LocalServerSerializer(yourdata, many=True).data
+        return Response(results)
