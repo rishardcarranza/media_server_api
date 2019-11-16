@@ -102,3 +102,29 @@ class FilesUser(models.Model):
 
     def __str__(self):
         return self.name
+
+class FileType(models.Model):
+    name = models.CharField(max_length = 100)
+    status = models.BooleanField(default=True, verbose_name = 'Estado')
+
+    class Meta:
+        verbose_name = 'Tipo de archivo'
+        verbose_name_plural = 'Tipos de archivos'
+        ordering = ['name']
+
+    def __str__(self):
+        return self.name
+
+class CommandServer(models.Model):
+    file_type = models.ForeignKey(FileType, on_delete=models.CASCADE, verbose_name = 'Tipo')
+    action = models.CharField(max_length = 50, verbose_name = 'Acción')
+    command = models.CharField(max_length = 200, verbose_name = 'Comando')
+    status = models.BooleanField(default=True, verbose_name = 'Estado')
+
+    class Meta:
+        verbose_name = 'comando para ejecutar'
+        verbose_name_plural = 'comandos para ejecutarse'
+        ordering = ['action']
+
+    def __str__(self):
+        return self.action

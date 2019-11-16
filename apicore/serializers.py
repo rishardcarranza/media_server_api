@@ -73,3 +73,8 @@ class ServerUserSerializer(serializers.ModelSerializer):
 class LocalServerSerializer(serializers.Serializer):
     ipaddr = serializers.CharField()
     user_request = serializers.CharField()
+
+class CommandServerSerializer(serializers.Serializer):
+    status = serializers.BooleanField()
+    command = serializers.CharField()
+    user_request = serializers.CharField()

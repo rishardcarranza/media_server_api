@@ -16,6 +16,7 @@ urlpatterns = [
     path('servers-users/', views.ServerUserList.as_view()),
     path('servers-users/<int:pk>/', views.ServerUserDetail.as_view()),
     path('server-info/', views.LocalServerView.as_view()),
+    path('command/', views.CommandServerView.as_view()),
     path('rest-auth/', include('rest_auth.urls')),
 ]
 
