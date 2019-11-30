@@ -107,34 +107,34 @@ class CommandServerView(APIView):
             _exec = CommandServer.objects.get(action=action)
             
             # Whats option to execute
-            if action == "volume":
-                os.system(_exec.command.format(value))
-            elif action == "display":
-                os.system(_exec.command.format(value))
-            elif action == "poweroff":
-                os.system(_exec.command)
-            elif action == "reboot":
-                os.system(_exec.command)
-            elif action == "play":
-                os.system(_exec.command)
-            elif action == "pause":
-                os.system(_exec.command)
-            elif action == "stop":
-                os.system(_exec.command)
-            elif action == "open-video":
-                os.system(_exec.command.format(value))
-            elif action == "open-audio":
-                os.system(_exec.command.format(value))
-            elif action == "open-image":
-                os.system(_exec.command.format(value))
-            elif action == "open-presentation":
-                os.system(_exec.command.format(value))
-            elif action == "next-slide":
-                os.system(_exec.command)
-            elif action == "prev-slide":
-                os.system(_exec.command)
-            else:
-                pass            
+            # if action == "volume":
+            #     os.system(_exec.command.format(value))
+            # elif action == "display":
+            #     os.system(_exec.command.format(value))
+            # elif action == "poweroff":
+            #     os.system(_exec.command)
+            # elif action == "reboot":
+            #     os.system(_exec.command)
+            # elif action == "play":
+            #     os.system(_exec.command)
+            # elif action == "pause":
+            #     os.system(_exec.command)
+            # elif action == "stop":
+            #     os.system(_exec.command)
+            # elif action == "open-video":
+            #     os.system(_exec.command.format(value))
+            # elif action == "open-audio":
+            #     os.system(_exec.command.format(value))
+            # elif action == "open-image":
+            #     os.system(_exec.command.format(value))
+            # elif action == "open-presentation":
+            #     os.system(_exec.command.format(value))
+            # elif action == "next-slide":
+            #     os.system(_exec.command)
+            # elif action == "prev-slide":
+            #     os.system(_exec.command)
+            # else:
+            #     pass            
 
         response_data = [{"status": True, "command": _exec.command.format(value), "user_request": request.user}]
         results = CommandServerSerializer(response_data, many=True).data
