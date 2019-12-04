@@ -105,8 +105,16 @@ class CommandServerView(APIView):
             value = request.data["value"]
             # Get the command from DB
             _exec = CommandServer.objects.get(action=action)
+            exec_command = ""
             
             # Whats option to execute
+            if value != "":
+                os.system(_exec.command.format(value))
+                exec_command = _exec.command.format(value)
+            else:
+                os.system(_exec.command)
+                exec_command = _exec.command
+
             # if action == "volume":
             #     os.system(_exec.command.format(value))
             # elif action == "display":
@@ -136,7 +144,7 @@ class CommandServerView(APIView):
             # else:
             #     pass            
 
-        response_data = [{"status": True, "command": _exec.command.format(value), "user_request": request.user}]
+        response_data = [{"status": True, "command": exec_command, "user_request": request.user}]
         results = CommandServerSerializer(response_data, many=True).data
 
         return Response(results)
