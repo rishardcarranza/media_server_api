@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UserProfile, Server, ServerUser, Extension, Career, FilesUser, CommandServer, FileType
+from .models import UserProfile, Server, ServerUser, Extension, Career, FilesUser, CommandServer, FileType, FilesUser
 
 # Register your models here.
 class ServerUserAdmin(admin.ModelAdmin):
@@ -24,11 +24,14 @@ class CommandServerAdmin(admin.ModelAdmin):
 class FileTypeAdmin(admin.ModelAdmin):
     list_display = ('name', 'status')
 
+class FilesUserAdmin(admin.ModelAdmin):
+    list_display = ('user', 'file')
+
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(Server, ServerAdmin)
 admin.site.register(ServerUser, ServerUserAdmin)
-admin.site.register(FilesUser)
 admin.site.register(Extension, ExtensionAdmin)
 admin.site.register(Career, CareerAdmin)
 admin.site.register(CommandServer, CommandServerAdmin)
 admin.site.register(FileType, FileTypeAdmin)
+admin.site.register(FilesUser, FilesUserAdmin)

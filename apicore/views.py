@@ -6,9 +6,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from django.conf import settings
 from django.contrib.auth.models import User
-from .models import Extension, Career, UserProfile, Server, ServerUser, CommandServer
-from .serializers import ExtensionSerializer, CareerSerializer, ProfileSerializer, UserSerializer, ServerSerializer, ServerUserSerializer, LocalServerSerializer, CommandServerSerializer
+from .models import Extension, Career, UserProfile, Server, ServerUser, CommandServer, FilesUser
+from .serializers import ExtensionSerializer, CareerSerializer, ProfileSerializer, UserSerializer, ServerSerializer, ServerUserSerializer, LocalServerSerializer, CommandServerSerializer, FilesUserSerializer
 from .permissions import IsOwnerOrReadOnly
 
 
@@ -82,6 +83,48 @@ class ServerUserList(generics.ListCreateAPIView):
 class ServerUserDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = ServerUser.objects.all()
     serializer_class = ServerUserSerializer
+
+class FilesUserList(generics.ListCreateAPIView):
+    queryset = FilesUser.objects.all()
+    serializer_class = FilesUserSerializer
+
+    def perform_create(self, serializer):
+        # Include the owner attribute directly, rather than from request data.
+        instance = serializer.save()
+        # Perform a custom post-save action.
+        media_path = settings.MEDIA_ROOT
+        filename = instance.file
+        file_path = media_path+"/"+str(filename)
+        content_type = self.request.FILES['file'].content_type
+
+        if 'audio' in str(content_type):
+            print('Archivo de audio')
+            # Get the command from DB
+            _exec = CommandServer.objects.get(action="open-audio")
+            os.system(_exec.command.format(file_path))
+        elif 'video' in str(content_type):
+            print('Archivo de video')
+            _exec = CommandServer.objects.get(action="open-video")
+            os.system(_exec.command.format(file_path))
+        elif 'image' in str(content_type):
+            print('Archivo de imagen')
+            _exec = CommandServer.objects.get(action="open-image")
+            os.system(_exec.command.format(file_path))
+        elif 'application' in str(content_type) and 'presentation' in str(content_type):
+            print('Archivo de presentacion en power point')
+            _exec = CommandServer.objects.get(action="open-presentation")
+            os.system(_exec.command.format(file_path))
+        else:
+            print('Archivo no soportado')
+
+        # os.system('open /Users/rishardcarranza/Environments/django/media_server/media/files/'+str(filename))
+        # print('Post save File action', self.request.FILES['file'].content_type, self.request.user)
+        
+        # send_email(instance.to_email, instance.message)
+
+class FilesUserDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = FilesUser.objects.all()
+    serializer_class = FilesUserSerializer
 
 class LocalServerView(APIView):
     

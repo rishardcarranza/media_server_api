@@ -2,7 +2,7 @@ from rest_framework import serializers
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
-from .models import Extension, Career, UserProfile, Career, Server, ServerUser
+from .models import Extension, Career, UserProfile, Career, Server, ServerUser, FilesUser
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -73,6 +73,11 @@ class ServerUserSerializer(serializers.ModelSerializer):
 class LocalServerSerializer(serializers.Serializer):
     ipaddr = serializers.CharField()
     user_request = serializers.CharField()
+
+class FilesUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FilesUser
+        fields = ('user', 'server', 'file')
 
 class CommandServerSerializer(serializers.Serializer):
     status = serializers.BooleanField()

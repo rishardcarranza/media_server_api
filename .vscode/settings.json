@@ -1,3 +1,4 @@
 {
-    "python.linting.pylintEnabled": true
+    "python.linting.pylintEnabled": true,
+    "python.pythonPath": "/Users/rishardcarranza/.local/share/virtualenvs/media_server-7ULoiP24/bin/python"
 }

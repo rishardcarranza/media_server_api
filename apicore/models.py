@@ -87,21 +87,32 @@ def ensure_profile_exists(sender, instance, **kwargs):
         UserProfile.objects.get_or_create(user=instance)
         print("Se ha creado el perfil para el usuario " + instance.username)
 
+# For custom upload functionally
+def custom_upload_to_media(instance, filename):
+    try:
+        
+        old_instance = FilesUser.objects.filter(pk=instance.pk)
+        # old_instance.file.delete()
+    except FilesUser.DoesNotExist:
+        old_instance = None
+    
+    return "files/" + filename
+
 class FilesUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     server = models.ForeignKey(Server, on_delete=models.CASCADE)
-    name = models.CharField(max_length=200)
-    extension = models.ForeignKey(Extension, on_delete=models.CASCADE)
-    size = models.IntegerField(blank=True, null=True)
-    path = models.CharField(max_length=200)
+    file = models.FileField(upload_to=custom_upload_to_media, blank=True, null=True, verbose_name = 'Archivo Multimedia')
+    # extension = models.ForeignKey(Extension, on_delete=models.CASCADE)
+    # size = models.IntegerField(blank=True, null=True)
+    # path = models.CharField(max_length=200)
 
     class Meta:
         verbose_name = 'archivo por usuario'
         verbose_name_plural = 'archivos por usuario'
-        ordering = ['name']
+        ordering = ['user__username']
 
     def __str__(self):
-        return self.name
+        return self.user.username
 
 class FileType(models.Model):
     name = models.CharField(max_length = 100)
