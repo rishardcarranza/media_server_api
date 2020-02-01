@@ -22,7 +22,7 @@ class CommandServerAdmin(admin.ModelAdmin):
     list_display = ('action', 'file_type', 'command', 'status')
 
 class FileTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'status')
+    list_display = ('name', 'get_extensions', 'status')
 
 class FilesUserAdmin(admin.ModelAdmin):
     list_display = ('user', 'file')

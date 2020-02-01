@@ -115,7 +115,8 @@ class FilesUser(models.Model):
         return self.user.username
 
 class FileType(models.Model):
-    name = models.CharField(max_length = 100)
+    name = models.CharField(max_length = 100, verbose_name = 'Nombre')
+    extensions = models.ManyToManyField(Extension, verbose_name="lista de extensiones")
     status = models.BooleanField(default=True, verbose_name = 'Estado')
 
     class Meta:
@@ -125,6 +126,9 @@ class FileType(models.Model):
 
     def __str__(self):
         return self.name
+
+    def get_extensions(self):
+        return ", ".join([e.name for e in self.extensions.all()])
 
 class CommandServer(models.Model):
     file_type = models.ForeignKey(FileType, on_delete=models.CASCADE, verbose_name = 'Tipo')

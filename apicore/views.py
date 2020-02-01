@@ -8,7 +8,7 @@ from rest_framework.views import APIView
 
 from django.conf import settings
 from django.contrib.auth.models import User
-from .models import Extension, Career, UserProfile, Server, ServerUser, CommandServer, FilesUser
+from .models import Extension, Career, UserProfile, Server, ServerUser, CommandServer, FilesUser, FileType
 from .serializers import ExtensionSerializer, CareerSerializer, ProfileSerializer, UserSerializer, ServerSerializer, ServerUserSerializer, LocalServerSerializer, CommandServerSerializer, FilesUserSerializer
 from .permissions import IsOwnerOrReadOnly
 
@@ -90,27 +90,36 @@ class FilesUserList(generics.ListCreateAPIView):
 
     def perform_create(self, serializer):
         # Include the owner attribute directly, rather than from request data.
+        # print(self.request, serializer)
         instance = serializer.save()
         # Perform a custom post-save action.
         media_path = settings.MEDIA_ROOT
         filename = instance.file
+        extsplit = str(instance.file).split('.')
+        extension = str(extsplit[len(extsplit)-1]).lower()
         file_path = media_path+"/"+str(filename)
-        content_type = self.request.FILES['file'].content_type
 
-        if 'audio' in str(content_type):
+        # Get the file extensions list by extension of file
+        _filetype = FileType.objects.get(extensions__name=extension)
+        content_type = _filetype.name
+
+
+        print(extsplit, extension, _filetype.name)
+
+        if 'audio' in str(content_type).lower():
             print('Archivo de audio')
             # Get the command from DB
             _exec = CommandServer.objects.get(action="open-audio")
             os.system(_exec.command.format(file_path))
-        elif 'video' in str(content_type):
+        elif 'video' in str(content_type).lower():
             print('Archivo de video')
             _exec = CommandServer.objects.get(action="open-video")
             os.system(_exec.command.format(file_path))
-        elif 'image' in str(content_type):
+        elif 'image' in str(content_type).lower():
             print('Archivo de imagen')
             _exec = CommandServer.objects.get(action="open-image")
             os.system(_exec.command.format(file_path))
-        elif 'application' in str(content_type) and 'presentation' in str(content_type):
+        elif 'presentation' in str(content_type).lower():
             print('Archivo de presentacion en power point')
             _exec = CommandServer.objects.get(action="open-presentation")
             os.system(_exec.command.format(file_path))
