@@ -100,8 +100,8 @@ def custom_upload_to_media(instance, filename):
 
 class FilesUser(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    server = models.ForeignKey(Server, on_delete=models.CASCADE)
-    file = models.FileField(upload_to=custom_upload_to_media, blank=True, null=True, verbose_name = 'Archivo Multimedia')
+    server = models.ForeignKey(Server, on_delete=models.CASCADE, blank=True, null=True)
+    file = models.FileField(upload_to=custom_upload_to_media, default=None, verbose_name = 'Archivo Multimedia')
     # extension = models.ForeignKey(Extension, on_delete=models.CASCADE)
     # size = models.IntegerField(blank=True, null=True)
     # path = models.CharField(max_length=200)

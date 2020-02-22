@@ -104,7 +104,7 @@ class FilesUserList(generics.ListCreateAPIView):
         content_type = _filetype.name
 
 
-        print(extsplit, extension, _filetype.name)
+        # print(extsplit, extension, _filetype.name)
 
         if 'audio' in str(content_type).lower():
             print('Archivo de audio')
