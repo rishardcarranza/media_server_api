@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.urls import include, path
 from rest_framework.urlpatterns import format_suffix_patterns
 from apicore import views
@@ -23,3 +24,8 @@ urlpatterns = [
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)
+
+# Custom title for Administration Panel
+admin.site.site_header = "uEasyShare Server"
+admin.site.site_title = "uEasyShare"
+admin.site.index_title = "Bienvenido(a) al Panel de Administración de uEasyShare server"
